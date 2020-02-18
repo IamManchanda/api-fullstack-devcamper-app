@@ -8,15 +8,15 @@ const {
   deleteBootcampById,
 } = require("../controllers/bootcamps");
 
-const bootcampsRoutes = Router();
-bootcampsRoutes
+const bootcampsRoute = Router();
+bootcampsRoute
   .route("/")
   .get(readAllBootcamps)
   .post(createNewBootcamp);
-bootcampsRoutes
+bootcampsRoute
   .route("/:id")
   .get(readBootcampById)
   .put(updateBootcampById)
   .delete(deleteBootcampById);
 
-module.exports = bootcampsRoutes;
+module.exports = bootcampsRoute;
