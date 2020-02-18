@@ -4,7 +4,8 @@
   "description": "API Backend for Fullstack DevCamper App",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "NODE_ENV=production node src/server",
+    "dev": "nodemon src/server"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/IamManchanda/api-fullstack-devcamper-app/issues"
   },
-  "homepage": "https://github.com/IamManchanda/api-fullstack-devcamper-app#readme"
+  "homepage": "https://github.com/IamManchanda/api-fullstack-devcamper-app#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
 }
