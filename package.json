@@ -1,0 +1,19 @@
+{
+  "name": "api-fullstack-devcamper-app",
+  "version": "1.0.0",
+  "description": "API Backend for Fullstack DevCamper App",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IamManchanda/api-fullstack-devcamper-app.git"
+  },
+  "author": "Harry Manchanda <IamManchanda>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IamManchanda/api-fullstack-devcamper-app/issues"
+  },
+  "homepage": "https://github.com/IamManchanda/api-fullstack-devcamper-app#readme"
+}
