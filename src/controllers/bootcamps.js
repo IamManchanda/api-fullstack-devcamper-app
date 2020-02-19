@@ -6,6 +6,7 @@ const Bootcamp = require("../models/Bootcamp");
 exports.readAllBootcamps = async (req, res, next) => {
   try {
     const bootcamps = await Bootcamp.find();
+
     if (!bootcamps || bootcamps.length === 0) {
       return res.status(400).json({
         success: false,
@@ -34,6 +35,7 @@ exports.readAllBootcamps = async (req, res, next) => {
 exports.readBootcampById = async (req, res, next) => {
   try {
     const bootcamp = await Bootcamp.findById(req.params.id);
+
     if (!bootcamp) {
       return res.status(400).json({
         success: false,
@@ -79,10 +81,32 @@ exports.createNewBootcamp = async (req, res, next) => {
 // @route   - PUT /api/v1/bootcamps/:id
 // @access - Public
 exports.updateBootcampById = async (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    message: `Update bootcamp by id: ${req.params.id}.`,
-  });
+  try {
+    const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!bootcamp) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          message: "Bootcamp not found",
+        },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully updated bootcamp by id",
+      data: { bootcamp },
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error,
+    });
+  }
 };
 
 // @desc    - Delete bootcamp by id.
