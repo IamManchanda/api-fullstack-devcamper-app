@@ -107,4 +107,4 @@ dist
 _rough
 
 #Config files
-config
+config/config.env
