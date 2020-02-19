@@ -4,10 +4,19 @@ const Bootcamp = require("../models/Bootcamp");
 // @route   - GET /api/v1/bootcamps
 // @access - Public
 exports.readAllBootcamps = async (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    message: "Read all bootcamps.",
-  });
+  try {
+    const bootcamps = await Bootcamp.find();
+    res.status(201).json({
+      success: true,
+      message: "Successfully read all bootcamps",
+      data: { bootcamps },
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error,
+    });
+  }
 };
 
 // @desc    - Read bootcamp by id.
@@ -31,10 +40,10 @@ exports.createNewBootcamp = async (req, res, next) => {
       message: "Successfully created new bootcamp",
       data: { bootcamp },
     });
-  } catch ({ errmsg }) {
+  } catch (error) {
     res.status(400).json({
       success: false,
-      message: errmsg,
+      error,
     });
   }
 };
