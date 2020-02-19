@@ -1,6 +1,5 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const colors = require("colors");
 
@@ -14,7 +13,7 @@ const bootcampsRoute = require("./routes/bootcamps");
 
 connectDB(MONGO_URI);
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 if (NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
