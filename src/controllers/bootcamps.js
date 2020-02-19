@@ -19,7 +19,7 @@ exports.readAllBootcamps = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Successfully read all bootcamps",
-      data: { bootcamps },
+      data: { count: bootcamps.length, bootcamps },
     });
   } catch (error) {
     res.status(400).json({
@@ -40,14 +40,14 @@ exports.readBootcampById = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         error: {
-          message: "Bootcamp not found",
+          message: `Bootcamp not found based on provided id: ${req.params.id}`,
         },
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Successfully read bootcamp by id",
+      message: `Successfully fetched bootcamp by id: ${req.params.id}`,
       data: { bootcamp },
     });
   } catch (error) {
@@ -91,14 +91,14 @@ exports.updateBootcampById = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         error: {
-          message: "Bootcamp not found",
+          message: `Bootcamp not found for updating based on provided id: ${req.params.id}`,
         },
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Successfully updated bootcamp by id",
+      message: `Successfully updated bootcamp by id: ${req.params.id}`,
       data: { bootcamp },
     });
   } catch (error) {
@@ -113,8 +113,26 @@ exports.updateBootcampById = async (req, res, next) => {
 // @route   - DELETE /api/v1/bootcamps/:id
 // @access - Public
 exports.deleteBootcampById = async (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    message: `Delete bootcamp by id: ${req.params.id}.`,
-  });
+  try {
+    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+
+    if (!bootcamp) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          message: `Bootcamp not found for deleting based on provided id: ${req.params.id}`,
+        },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully deleted bootcamp by id: ${req.params.id}`,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error,
+    });
+  }
 };
