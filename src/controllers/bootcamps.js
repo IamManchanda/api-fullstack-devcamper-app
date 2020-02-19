@@ -6,7 +6,16 @@ const Bootcamp = require("../models/Bootcamp");
 exports.readAllBootcamps = async (req, res, next) => {
   try {
     const bootcamps = await Bootcamp.find();
-    res.status(201).json({
+    if (!bootcamps || bootcamps.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          message: "Bootcamps list is empty",
+        },
+      });
+    }
+
+    res.status(200).json({
       success: true,
       message: "Successfully read all bootcamps",
       data: { bootcamps },
@@ -23,10 +32,28 @@ exports.readAllBootcamps = async (req, res, next) => {
 // @route   - GET /api/v1/bootcamps/:id
 // @access - Public
 exports.readBootcampById = async (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    message: `Read bootcamp by id: ${req.params.id}.`,
-  });
+  try {
+    const bootcamp = await Bootcamp.findById(req.params.id);
+    if (!bootcamp) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          message: "Bootcamp not found",
+        },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully read bootcamp by id",
+      data: { bootcamp },
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error,
+    });
+  }
 };
 
 // @desc    - Create new bootcamp.
