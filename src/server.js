@@ -10,6 +10,7 @@ const { NODE_ENV, PORT = 5000, MONGO_URI } = process.env;
 
 const connectDB = require("./connect-db");
 const bootcampsRoute = require("./routes/bootcamps");
+const errorHandler = require("./middlewares/error");
 
 connectDB(MONGO_URI);
 const app = express();
@@ -18,6 +19,7 @@ if (NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 app.use("/api/v1/bootcamps", bootcampsRoute);
+app.use(errorHandler);
 
 const server = app.listen(
   PORT,
