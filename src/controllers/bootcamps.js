@@ -8,11 +8,6 @@ const asyncHandler = require("../middlewares/async");
 exports.readAllBootcamps = asyncHandler(async (req, res, next) => {
   const bootcamps = await Bootcamp.find();
 
-  if (!bootcamps || bootcamps.length === 0) {
-    const errorMessage = "Bootcamps list is empty";
-    return next(new ErrorResponse(errorMessage, 404));
-  }
-
   res.status(200).json({
     success: true,
     message: "Successfully read all bootcamps",
