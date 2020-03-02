@@ -105,6 +105,7 @@ dist
 
 #Rough files
 _rough
+scrapbook.mongo
 
 #Config files
 config/config.env
