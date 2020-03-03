@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const {
   readAllBootcamps,
+  readAllBootcampsByDistance,
   readBootcampById,
   createNewBootcamp,
   updateBootcampById,
@@ -18,5 +19,8 @@ bootcampsRoute
   .get(readBootcampById)
   .put(updateBootcampById)
   .delete(deleteBootcampById);
+bootcampsRoute
+  .route("/radius/:zipcode/:distance")
+  .get(readAllBootcampsByDistance);
 
 module.exports = bootcampsRoute;
