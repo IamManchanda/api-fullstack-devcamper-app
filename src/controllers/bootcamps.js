@@ -114,7 +114,7 @@ exports.readBootcampById = asyncHandler(async (req, res, next) => {
 
 // @desc    - Create new bootcamp.
 // @route   - POST /api/v1/bootcamps/
-// @access - Public
+// @access - Private
 exports.createNewBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.create(req.body);
   res.status(201).json({
@@ -126,7 +126,7 @@ exports.createNewBootcamp = asyncHandler(async (req, res, next) => {
 
 // @desc    - Update bootcamp by id.
 // @route   - PUT /api/v1/bootcamps/:id
-// @access - Public
+// @access - Private
 exports.updateBootcampById = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -147,7 +147,7 @@ exports.updateBootcampById = asyncHandler(async (req, res, next) => {
 
 // @desc    - Delete bootcamp by id.
 // @route   - DELETE /api/v1/bootcamps/:id
-// @access - Public
+// @access - Private
 exports.deleteBootcampById = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 

@@ -1,4 +1,5 @@
 const Course = require("../models/Course");
+const Bootcamp = require("../models/Bootcamp");
 const ErrorResponse = require("../utils/ErrorResponse");
 const asyncHandler = require("../middlewares/async");
 
@@ -50,6 +51,27 @@ exports.readCourseById = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: `Successfully fetched course by id: ${req.params.id}`,
+    data: { course },
+  });
+});
+
+// @desc    - Create new course by bootcamp id.
+// @route   - POST /api/v1/courses/:bootcampId/courses
+// @access - Private
+exports.createNewCourseByBootcampId = asyncHandler(async (req, res, next) => {
+  req.body.bootcamp = req.params.bootcampId;
+  const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+
+  if (!bootcamp) {
+    const errorMessage = `Bootcamp not found based on provided id: ${req.params.bootcampId}`;
+    return next(new ErrorResponse(errorMessage, 404));
+  }
+
+  const course = await Course.create(req.body);
+
+  res.status(201).json({
+    success: true,
+    message: `Successfully created new course by bootcamp id : ${req.params.bootcampId}`,
     data: { course },
   });
 });
