@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const coursesRoute = require("./courses");
 
 const {
   readAllBootcamps,
@@ -10,6 +11,9 @@ const {
 } = require("../controllers/bootcamps");
 
 const bootcampsRoute = Router();
+
+bootcampsRoute.use("/:bootcampId/courses", coursesRoute);
+
 bootcampsRoute
   .route("/")
   .get(readAllBootcamps)
