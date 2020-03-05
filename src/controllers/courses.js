@@ -10,9 +10,14 @@ exports.readAllCourses = asyncHandler(async (req, res, next) => {
   const { bootcampId } = req.params;
   let query;
   if (bootcampId) {
-    query = Course.find({ bootcamp: bootcampId });
+    query = Course.find({
+      bootcamp: bootcampId,
+    });
   } else {
-    query = Course.find();
+    query = Course.find().populate({
+      path: "bootcamp",
+      select: "name description",
+    });
   }
   const courses = await query;
 
@@ -25,5 +30,26 @@ exports.readAllCourses = asyncHandler(async (req, res, next) => {
       count: courses.length,
       courses,
     },
+  });
+});
+
+// @desc    - Read course by id.
+// @route   - GET /api/v1/courses/:id
+// @access - Public
+exports.readCourseById = asyncHandler(async (req, res, next) => {
+  const course = await Course.findById(req.params.id).populate({
+    path: "bootcamp",
+    select: "name description",
+  });
+
+  if (!course) {
+    const errorMessage = `Course not found based on provided id: ${req.params.id}`;
+    return next(new ErrorResponse(errorMessage, 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Successfully fetched course by id: ${req.params.id}`,
+    data: { course },
   });
 });

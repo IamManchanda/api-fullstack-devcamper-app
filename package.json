@@ -4,8 +4,9 @@
   "description": "API Backend for Fullstack DevCamper App",
   "main": "src/server.js",
   "scripts": {
-    "seed:import": "node src/seeder -i",
     "seed:destroy": "node src/seeder -d",
+    "seed:import": "node src/seeder -i",
+    "seed": "npm run seed:destroy && npm run seed:import",
     "dev": "nodemon src/server",
     "start": "NODE_ENV=production node src/server"
   },
