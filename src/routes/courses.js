@@ -5,6 +5,7 @@ const {
   readCourseById,
   createNewCourseByBootcampId,
   updateCourseById,
+  deleteCourseById,
 } = require("../controllers/courses");
 
 const coursesRoute = Router({ mergeParams: true });
@@ -15,6 +16,7 @@ coursesRoute
 coursesRoute
   .route("/:id")
   .get(readCourseById)
-  .put(updateCourseById);
+  .put(updateCourseById)
+  .delete(deleteCourseById);
 
 module.exports = coursesRoute;
