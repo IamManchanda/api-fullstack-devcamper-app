@@ -7,6 +7,7 @@ const {
   readBootcampById,
   createNewBootcamp,
   updateBootcampById,
+  uploadPhotoForBootcampById,
   deleteBootcampById,
 } = require("../controllers/bootcamps");
 
@@ -18,11 +19,15 @@ bootcampsRoute
   .route("/")
   .get(readAllBootcamps)
   .post(createNewBootcamp);
+
 bootcampsRoute
   .route("/:id")
   .get(readBootcampById)
   .put(updateBootcampById)
   .delete(deleteBootcampById);
+
+bootcampsRoute.route("/:id/photo").put(uploadPhotoForBootcampById);
+
 bootcampsRoute
   .route("/radius/:zipcode/:distance")
   .get(readAllBootcampsByDistance);

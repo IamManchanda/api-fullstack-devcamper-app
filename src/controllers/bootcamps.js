@@ -1,7 +1,10 @@
+const path = require("path");
 const Bootcamp = require("../models/Bootcamp");
 const ErrorResponse = require("../utils/ErrorResponse");
 const geocoder = require("../utils/geocoder");
 const asyncHandler = require("../middlewares/async");
+
+const { FILE_UPLOAD_PATH, MAX_FILE_UPLOAD_SIZE } = process.env;
 
 // @desc    - Read all bootcamps.
 // @route   - GET /api/v1/bootcamps
@@ -145,6 +148,63 @@ exports.updateBootcampById = asyncHandler(async (req, res, next) => {
     message: `Successfully updated bootcamp by id: ${req.params.id}`,
     data: { bootcamp },
   });
+});
+
+// @desc    - Upload photo for bootcamp by id.
+// @route   - PUT /api/v1/bootcamps/:id/photo
+// @access - Private
+exports.uploadPhotoForBootcampById = asyncHandler(async (req, res, next) => {
+  let bootcamp = await Bootcamp.findById(req.params.id);
+
+  if (!bootcamp) {
+    const errorMessage = `Bootcamp not found based on provided id: ${req.params.id}`;
+    return next(new ErrorResponse(errorMessage, 404));
+  }
+
+  if (!req.files) {
+    const errorMessage = `Please upload a file to a bootcamp with id: ${req.params.id}`;
+    return next(new ErrorResponse(errorMessage, 400));
+  }
+
+  const { file } = req.files;
+
+  if (!file.mimetype.startsWith("image")) {
+    const errorMessage = "Please upload an image file";
+    return next(new ErrorResponse(errorMessage, 400));
+  }
+
+  if (file.size > MAX_FILE_UPLOAD_SIZE) {
+    const errorMessage = `Please upload an image less than ${MAX_FILE_UPLOAD_SIZE}`;
+    return next(new ErrorResponse(errorMessage, 400));
+  }
+
+  const date = new Date();
+  const timestamp = date.getTime();
+
+  file.name = `photo_${bootcamp._id}_${timestamp}${path.parse(file.name).ext}`;
+  file.mv(
+    `${FILE_UPLOAD_PATH}/${file.name}`,
+    async function fileUploadErrorHandler(error) {
+      if (error) {
+        console.error(error);
+        const errorMessage =
+          "Server Error: Problem with file upload. Please try again.";
+        return next(new ErrorResponse(errorMessage, 500));
+      }
+
+      await Bootcamp.findByIdAndUpdate(req.params.id, {
+        photo: file.name,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: `Photo Successfully uploaded to bootcamp by id: ${req.params.id}`,
+        data: { photo: file.name },
+      });
+    },
+  );
+
+  console.log(file);
 });
 
 // @desc    - Delete bootcamp by id.
