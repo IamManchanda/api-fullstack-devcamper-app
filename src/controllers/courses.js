@@ -9,29 +9,24 @@ const asyncHandler = require("../middlewares/async");
 // @access - Public
 exports.readAllCourses = asyncHandler(async (req, res, next) => {
   const { bootcampId } = req.params;
-  let query;
   if (bootcampId) {
-    query = Course.find({
+    const courses = await Course.find({
       bootcamp: bootcampId,
     });
+    res.status(200).json({
+      success: true,
+      message: `Successfully read all courses by bootcamp id : ${bootcampId}`,
+      data: {
+        count: courses.length,
+        courses,
+      },
+    });
   } else {
-    query = Course.find().populate({
-      path: "bootcamp",
-      select: "name description",
+    res.status(200).json({
+      message: "Successfully read all courses",
+      ...res.advancedResults,
     });
   }
-  const courses = await query;
-
-  res.status(200).json({
-    success: true,
-    message: bootcampId
-      ? `Successfully read all courses`
-      : `Successfully read all courses by bootcamp id : ${bootcampId}`,
-    data: {
-      count: courses.length,
-      courses,
-    },
-  });
 });
 
 // @desc    - Read course by id.

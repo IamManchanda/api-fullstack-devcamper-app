@@ -8,10 +8,19 @@ const {
   deleteCourseById,
 } = require("../controllers/courses");
 
+const Course = require("../models/Course");
+const advancedResults = require("../middlewares/advanced-results");
+
 const coursesRoute = Router({ mergeParams: true });
 coursesRoute
   .route("/")
-  .get(readAllCourses)
+  .get(
+    advancedResults(Course, {
+      path: "bootcamp",
+      select: "name description",
+    }),
+    readAllCourses,
+  )
   .post(createNewCourseByBootcampId);
 coursesRoute
   .route("/:id")

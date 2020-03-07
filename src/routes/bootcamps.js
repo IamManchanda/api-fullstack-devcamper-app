@@ -11,13 +11,16 @@ const {
   deleteBootcampById,
 } = require("../controllers/bootcamps");
 
+const Bootcamp = require("../models/Bootcamp");
+const advancedResults = require("../middlewares/advanced-results");
+
 const bootcampsRoute = Router();
 
 bootcampsRoute.use("/:bootcampId/courses", coursesRoute);
 
 bootcampsRoute
   .route("/")
-  .get(readAllBootcamps)
+  .get(advancedResults(Bootcamp, "courses"), readAllBootcamps)
   .post(createNewBootcamp);
 
 bootcampsRoute
