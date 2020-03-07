@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const { JWT_SECRET, JWT_REGISTER_FINISH } = process.env;
+const { JWT_SECRET, JWT_LOGIN_FINISH } = process.env;
 
 const userSchema = new Schema({
   name: {
@@ -43,9 +43,13 @@ userSchema.pre("save", async function saveBcryptPasswordHandler(next) {
 });
 
 userSchema.methods.readSignedJwtToken = function readSignedJwtToken() {
-  return jwt.sign({ id: this._id }, JWT_SECRET, {
-    expiresIn: JWT_REGISTER_FINISH,
-  });
+  return jwt.sign({ id: this._id }, JWT_SECRET);
+};
+
+userSchema.methods.matchPassword = async function matchPassword(
+  enteredPassword,
+) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
 module.exports = model("User", userSchema);
