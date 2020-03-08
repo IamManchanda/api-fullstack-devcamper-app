@@ -13,7 +13,7 @@ const {
 
 const Bootcamp = require("../models/Bootcamp");
 const advancedResults = require("../middlewares/advanced-results");
-const { protect } = require("../middlewares/auth");
+const { protect, authorize } = require("../middlewares/auth");
 
 const bootcampsRoute = Router();
 
@@ -22,15 +22,17 @@ bootcampsRoute.use("/:bootcampId/courses", coursesRoute);
 bootcampsRoute
   .route("/")
   .get(advancedResults(Bootcamp, "courses"), readAllBootcamps)
-  .post(protect, createNewBootcamp);
+  .post(protect, authorize("publisher", "admin"), createNewBootcamp);
 
 bootcampsRoute
   .route("/:id")
   .get(readBootcampById)
-  .put(protect, updateBootcampById)
-  .delete(protect, deleteBootcampById);
+  .put(protect, authorize("publisher", "admin"), updateBootcampById)
+  .delete(protect, authorize("publisher", "admin"), deleteBootcampById);
 
-bootcampsRoute.route("/:id/photo").put(protect, uploadPhotoForBootcampById);
+bootcampsRoute
+  .route("/:id/photo")
+  .put(protect, authorize("publisher", "admin"), uploadPhotoForBootcampById);
 
 bootcampsRoute
   .route("/radius/:zipcode/:distance")

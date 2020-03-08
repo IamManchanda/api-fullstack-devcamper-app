@@ -10,7 +10,7 @@ const {
 
 const Course = require("../models/Course");
 const advancedResults = require("../middlewares/advanced-results");
-const { protect } = require("../middlewares/auth");
+const { protect, authorize } = require("../middlewares/auth");
 
 const coursesRoute = Router({ mergeParams: true });
 coursesRoute
@@ -22,11 +22,11 @@ coursesRoute
     }),
     readAllCourses,
   )
-  .post(protect, createNewCourseByBootcampId);
+  .post(protect, authorize("publisher", "admin"), createNewCourseByBootcampId);
 coursesRoute
   .route("/:id")
   .get(readCourseById)
-  .put(protect, updateCourseById)
-  .delete(protect, deleteCourseById);
+  .put(protect, authorize("publisher", "admin"), updateCourseById)
+  .delete(protect, authorize("publisher", "admin"), deleteCourseById);
 
 module.exports = coursesRoute;
