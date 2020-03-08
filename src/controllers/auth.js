@@ -25,6 +25,18 @@ const sendTokenResponse = (user, statusCode, res, message) => {
     });
 };
 
+// @desc    - Read current logged in user.
+// @route   - POST /api/v1/auth/me
+// @access - Private
+exports.readCurrentLoggedInUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  res.status(200).json({
+    success: true,
+    message: "Read current logged in user successfully.",
+    data: { user },
+  });
+});
+
 // @desc    - Register user.
 // @route   - POST /api/v1/auth/register
 // @access - Public
