@@ -2,19 +2,38 @@ const User = require("../models/User");
 const ErrorResponse = require("../utils/ErrorResponse");
 const asyncHandler = require("../middlewares/async");
 
+const { JWT_COOKIE_FINISH } = process.env;
+
+const sendTokenResponse = (user, statusCode, res, message) => {
+  const token = user.readSignedJwtToken();
+  const options = {
+    expires: new Date(Date.now() + JWT_COOKIE_FINISH * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === "production") {
+    options.secure = true;
+  }
+
+  res
+    .status(statusCode)
+    .cookie("token", token, options)
+    .json({
+      success: true,
+      message,
+      data: { token },
+    });
+};
+
 // @desc    - Register user.
 // @route   - POST /api/v1/auth/register
 // @access - Public
 exports.registerUser = asyncHandler(async (req, res, next) => {
   const { name, email, role, password } = req.body;
   const user = await User.create({ name, email, role, password });
-  const token = user.readSignedJwtToken();
 
-  res.status(200).json({
-    success: true,
-    message: "Successfully registered the user.",
-    data: { token },
-  });
+  const successMessage = "Successfully registered the user.";
+  sendTokenResponse(user, 200, res, successMessage);
 });
 
 // @desc    - Login user.
@@ -42,11 +61,6 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(errorMessage, 401));
   }
 
-  const token = user.readSignedJwtToken();
-
-  res.status(200).json({
-    success: true,
-    message: "User has logged in successfully.",
-    data: { token },
-  });
+  const successMessage = "User has logged in successfully.";
+  sendTokenResponse(user, 200, res, successMessage);
 });

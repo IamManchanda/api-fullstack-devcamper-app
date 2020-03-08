@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const colors = require("colors");
 const fileupload = require("express-fileupload");
+const cookieParser = require("cookie-parser");
 
 dotenv.config({
   path: "./config/config.env",
@@ -20,6 +21,7 @@ connectDB(MONGO_URI);
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 if (NODE_ENV === "development") {
   app.use(morgan("dev"));
