@@ -58,7 +58,7 @@ userSchema.methods.matchPassword = async function matchPassword(
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userSchema.methods.readResetPasswordToken = async function readResetPasswordToken() {
+userSchema.methods.readResetPasswordToken = function readResetPasswordToken() {
   const resetToken = crypto.randomBytes(20).toString("hex");
   this.resetPasswordToken = crypto
     .createHash("sha256")
