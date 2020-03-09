@@ -27,10 +27,10 @@ const sendTokenResponse = (user, statusCode, res, message) => {
     });
 };
 
-// @desc    - Read current logged in user.
+// @desc    - Read logged in user.
 // @route   - GET /api/v1/auth/me
 // @access - Private
-exports.readCurrentLoggedInUser = asyncHandler(async (req, res, next) => {
+exports.readLoggedInUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   res.status(200).json({
     success: true,
@@ -152,10 +152,10 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res, successMessage);
 });
 
-// @desc    - Update user details.
+// @desc    - Update logged in user details.
 // @route   - PUT /api/v1/auth/me/update-details
 // @access - Private
-exports.updateUserDetails = asyncHandler(async (req, res, next) => {
+exports.updateLoggedInUserDetails = asyncHandler(async (req, res, next) => {
   const { name, email } = req.body;
   const user = await User.findByIdAndUpdate(
     req.user.id,
@@ -175,10 +175,10 @@ exports.updateUserDetails = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    - Update user password.
+// @desc    - Update logged in user password.
 // @route   - PUT /api/v1/auth/me/update-password
 // @access - Private
-exports.updateUserPassword = asyncHandler(async (req, res, next) => {
+exports.updateLoggedInUserPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
 
   const isMatchedPassword = await user.matchPassword(req.body.currentPassword);
