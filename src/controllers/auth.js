@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const User = require("../models/User");
 const ErrorResponse = require("../utils/ErrorResponse");
 const sendEmail = require("../utils/sendEmail");
@@ -97,7 +98,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   const resetUrl = `${req.protocol}://${req.get(
     "host",
-  )}/api/v1/reset-password/${resetToken}`;
+  )}/api/v1/auth/reset-password/${resetToken}`;
   const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to \n\n ${resetUrl}`;
 
   try {
@@ -119,10 +120,34 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     const errorMessage = "Email could not be sent.";
     return next(new ErrorResponse(errorMessage, 500));
   }
+});
 
-  res.status(200).json({
-    success: true,
-    /* message: "Forgotten password reset token", */
-    data: { user },
+// @desc    - Reset password.
+// @route   - PUT /api/v1/auth/reset-password/:resetToken
+// @access - Public
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.resetToken)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordFinish: {
+      $gt: Date.now(),
+    },
   });
+
+  if (!user) {
+    const errorMessage = "Invalid token.";
+    return next(new ErrorResponse(errorMessage, 400));
+  }
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordFinish = undefined;
+  await user.save();
+
+  const successMessage = "Password reset was successful.";
+  sendTokenResponse(user, 200, res, successMessage);
 });
