@@ -26,7 +26,7 @@ const sendTokenResponse = (user, statusCode, res, message) => {
 };
 
 // @desc    - Read current logged in user.
-// @route   - POST /api/v1/auth/me
+// @route   - GET /api/v1/auth/me
 // @access - Private
 exports.readCurrentLoggedInUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
@@ -75,4 +75,26 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
 
   const successMessage = "User has logged in successfully.";
   sendTokenResponse(user, 200, res, successMessage);
+});
+
+// @desc    - Forgot password.
+// @route   - POST /api/v1/auth/forgot-password
+// @access - Public
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    const errorMessage = "There is no user with that email.";
+    return next(new ErrorResponse(errorMessage, 400));
+  }
+
+  const resetToken = user.readResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    /* message: "Forgotten password reset token", */
+    data: { user },
+  });
 });
