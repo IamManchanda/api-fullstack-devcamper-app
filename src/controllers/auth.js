@@ -151,3 +151,45 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   const successMessage = "Password reset was successful.";
   sendTokenResponse(user, 200, res, successMessage);
 });
+
+// @desc    - Update user details.
+// @route   - PUT /api/v1/auth/me/update-details
+// @access - Private
+exports.updateUserDetails = asyncHandler(async (req, res, next) => {
+  const { name, email } = req.body;
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      name,
+      email,
+    },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+  res.status(200).json({
+    success: true,
+    message: "User details updated successfully.",
+    data: { user },
+  });
+});
+
+// @desc    - Update user password.
+// @route   - PUT /api/v1/auth/me/update-password
+// @access - Private
+exports.updateUserPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  const isMatchedPassword = await user.matchPassword(req.body.currentPassword);
+  if (!isMatchedPassword) {
+    const errorMessage = "Password does not match, is incorrect.";
+    return next(new ErrorResponse(errorMessage, 401));
+  }
+
+  user.password = req.body.newPassword;
+  await user.save();
+
+  const successMessage = "User password updated successfully.";
+  sendTokenResponse(user, 200, res, successMessage);
+});
