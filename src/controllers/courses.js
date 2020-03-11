@@ -106,7 +106,7 @@ exports.updateCourseById = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    - Delete course by id.
-// @route   - PUT /api/v1/courses/:id
+// @route   - DELETE /api/v1/courses/:id
 // @access - Private
 exports.deleteCourseById = asyncHandler(async (req, res, next) => {
   const course = await Course.findById(req.params.id);

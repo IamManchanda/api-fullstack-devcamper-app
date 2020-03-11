@@ -166,8 +166,6 @@ exports.uploadPhotoForBootcampById = asyncHandler(async (req, res, next) => {
       });
     },
   );
-
-  console.log(file);
 });
 
 // @desc    - Delete bootcamp by id.

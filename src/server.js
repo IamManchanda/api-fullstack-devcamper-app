@@ -13,6 +13,7 @@ const { NODE_ENV, PORT = 5000, MONGO_URI } = process.env;
 
 const connectDB = require("./connect-db");
 const authRoute = require("./routes/auth");
+const usersRoute = require("./routes/users");
 const bootcampsRoute = require("./routes/bootcamps");
 const coursesRoute = require("./routes/courses");
 const errorHandler = require("./middlewares/error");
@@ -30,6 +31,7 @@ if (NODE_ENV === "development") {
 app.use(fileupload());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/auth/admin/users", usersRoute);
 app.use("/api/v1/bootcamps", bootcampsRoute);
 app.use("/api/v1/courses", coursesRoute);
 app.use(errorHandler);
