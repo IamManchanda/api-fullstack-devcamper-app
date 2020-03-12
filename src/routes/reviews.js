@@ -1,6 +1,6 @@
 const { Router } = require("express");
 
-const { readAllReviews } = require("../controllers/reviews");
+const { readAllReviews, readReviewById } = require("../controllers/reviews");
 
 const Review = require("../models/Review");
 const advancedResults = require("../middlewares/advanced-results");
@@ -14,5 +14,6 @@ reviewsRoute.route("/").get(
   }),
   readAllReviews,
 );
+reviewsRoute.route("/:id").get(readReviewById);
 
 module.exports = reviewsRoute;
