@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const {
   readLoggedInUser,
+  logoutLoggedInUser,
   registerUser,
   loginUser,
   forgotPassword,
@@ -14,6 +15,7 @@ const { protect } = require("../middlewares/auth");
 
 const authRoute = Router();
 authRoute.route("/me").get(protect, readLoggedInUser);
+authRoute.route("/me/logout").get(protect, logoutLoggedInUser);
 authRoute.route("/me/update-details").put(protect, updateLoggedInUserDetails);
 authRoute.route("/me/update-password").put(protect, updateLoggedInUserPassword);
 authRoute.route("/register").post(registerUser);

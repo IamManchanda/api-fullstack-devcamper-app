@@ -39,6 +39,23 @@ exports.readLoggedInUser = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc    - Logout logged in user.
+// @route   - GET /api/v1/auth/me/logout
+// @access - Private
+exports.logoutLoggedInUser = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "none", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({
+    success: true,
+    message: "Current logged in user logged out successfully.",
+    data: {
+      token: "none",
+    },
+  });
+});
+
 // @desc    - Register user.
 // @route   - POST /api/v1/auth/register
 // @access - Public
