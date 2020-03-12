@@ -43,4 +43,37 @@ reviewSchema.index(
   },
 );
 
+reviewSchema.statics.calculateAverageRating = async function calculateAverageRating(
+  bootcampId,
+) {
+  const arr = await this.aggregate([
+    {
+      $match: {
+        bootcamp: bootcampId,
+      },
+    },
+    {
+      $group: {
+        _id: "$bootcamp",
+        averageRating: {
+          $avg: "$rating",
+        },
+      },
+    },
+  ]);
+  try {
+    await this.model("Bootcamp").findByIdAndUpdate(bootcampId, {
+      averageRating: arr[0].averageRating,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+reviewSchema.post("save", async function calculateAverageRatingAfterSave() {
+  await this.constructor.calculateAverageRating(this.bootcamp);
+});
+reviewSchema.pre("remove", async function calculateAverageRatingBeforeRemove() {
+  await this.constructor.calculateAverageRating(this.bootcamp);
+});
+
 module.exports = model("Review", reviewSchema);
