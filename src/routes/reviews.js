@@ -4,6 +4,8 @@ const {
   readAllReviews,
   readReviewById,
   createNewReviewByBootcampId,
+  updateReviewById,
+  deleteReviewById,
 } = require("../controllers/reviews");
 
 const Review = require("../models/Review");
@@ -21,6 +23,10 @@ reviewsRoute
     readAllReviews,
   )
   .post(protect, authorize("user", "admin"), createNewReviewByBootcampId);
-reviewsRoute.route("/:id").get(readReviewById);
+reviewsRoute
+  .route("/:id")
+  .get(readReviewById)
+  .put(protect, authorize("user", "admin"), updateReviewById)
+  .delete(protect, authorize("user", "admin"), deleteReviewById);
 
 module.exports = reviewsRoute;

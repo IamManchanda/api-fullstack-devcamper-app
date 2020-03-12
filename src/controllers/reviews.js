@@ -71,3 +71,55 @@ exports.createNewReviewByBootcampId = asyncHandler(async (req, res, next) => {
     data: { review },
   });
 });
+
+// @desc    - Update review by id.
+// @route   - PUT /api/v1/reviews/:id
+// @access - Private
+exports.updateReviewById = asyncHandler(async (req, res, next) => {
+  let review = await Review.findById(req.params.id);
+
+  if (!review) {
+    const errorMessage = `Review not found based on provided id: ${req.params.id}`;
+    return next(new ErrorResponse(errorMessage, 404));
+  }
+
+  if (review.user.toString() !== req.user.id && req.user.role !== "admin") {
+    const errorMessage = `User: ${req.user.id} is not authorized to update this review`;
+    return next(new ErrorResponse(errorMessage, 401));
+  }
+
+  review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: `Successfully updated review by id: ${req.params.id}`,
+    data: { review },
+  });
+});
+
+// @desc    - Delete review by id.
+// @route   - DELETE /api/v1/reviews/:id
+// @access - Private
+exports.deleteReviewById = asyncHandler(async (req, res, next) => {
+  const review = await Review.findById(req.params.id);
+
+  if (!review) {
+    const errorMessage = `Review not found based on provided id: ${req.params.id}`;
+    return next(new ErrorResponse(errorMessage, 404));
+  }
+
+  if (review.user.toString() !== req.user.id && req.user.role !== "admin") {
+    const errorMessage = `User: ${req.user.id} is not authorized to delete this review`;
+    return next(new ErrorResponse(errorMessage, 401));
+  }
+
+  await review.remove();
+
+  res.status(200).json({
+    success: true,
+    message: `Successfully deleted review by id: ${req.params.id}`,
+  });
+});
