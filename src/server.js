@@ -16,6 +16,7 @@ const authRoute = require("./routes/auth");
 const usersRoute = require("./routes/users");
 const bootcampsRoute = require("./routes/bootcamps");
 const coursesRoute = require("./routes/courses");
+const reviewsRoute = require("./routes/reviews");
 const errorHandler = require("./middlewares/error");
 
 connectDB(MONGO_URI);
@@ -34,6 +35,7 @@ app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/auth/admin/users", usersRoute);
 app.use("/api/v1/bootcamps", bootcampsRoute);
 app.use("/api/v1/courses", coursesRoute);
+app.use("/api/v1/reviews", reviewsRoute);
 app.use(errorHandler);
 
 const server = app.listen(

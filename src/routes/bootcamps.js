@@ -1,5 +1,4 @@
 const { Router } = require("express");
-const coursesRoute = require("./courses");
 
 const {
   readAllBootcamps,
@@ -14,10 +13,13 @@ const {
 const Bootcamp = require("../models/Bootcamp");
 const advancedResults = require("../middlewares/advanced-results");
 const { protect, authorize } = require("../middlewares/auth");
+const coursesRoute = require("./courses");
+const reviewsRoute = require("./reviews");
 
 const bootcampsRoute = Router();
 
 bootcampsRoute.use("/:bootcampId/courses", coursesRoute);
+bootcampsRoute.use("/:bootcampId/reviews", reviewsRoute);
 
 bootcampsRoute
   .route("/")
