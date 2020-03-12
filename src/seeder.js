@@ -39,10 +39,10 @@ const reviews = JSON.parse(
 
 const importData = async () => {
   try {
+    await User.create(users);
     await Bootcamp.create(bootcamps);
     await Course.create(courses);
     await Review.create(reviews);
-    await User.create(users);
     console.log("Data Imported...".green);
     process.exit();
   } catch (error) {
@@ -52,10 +52,10 @@ const importData = async () => {
 
 const destroyData = async () => {
   try {
+    await User.deleteMany();
     await Bootcamp.deleteMany();
     await Course.deleteMany();
     await Review.deleteMany();
-    await User.deleteMany();
     console.log("Data Destroyed...".red);
     if (process.argv[2] === "-d") {
       process.exit();
