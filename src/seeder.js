@@ -39,11 +39,11 @@ const reviews = JSON.parse(
 
 const importData = async () => {
   try {
-    await User.create(users);
     await Bootcamp.create(bootcamps);
     await Course.create(courses);
     await Review.create(reviews);
-    console.log("Data Imported...".green.inverse);
+    await User.create(users);
+    console.log("Data Imported...".green);
     process.exit();
   } catch (error) {
     console.error(error);
@@ -52,12 +52,23 @@ const importData = async () => {
 
 const destroyData = async () => {
   try {
-    await User.deleteMany();
     await Bootcamp.deleteMany();
     await Course.deleteMany();
     await Review.deleteMany();
-    console.log("Data Destroyed...".green.inverse);
-    process.exit();
+    await User.deleteMany();
+    console.log("Data Destroyed...".red);
+    if (process.argv[2] === "-d") {
+      process.exit();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const resetData = async () => {
+  try {
+    await destroyData();
+    await importData();
   } catch (error) {
     console.error(error);
   }
@@ -67,4 +78,6 @@ if (process.argv[2] === "-i") {
   importData();
 } else if (process.argv[2] === "-d") {
   destroyData();
+} else if (process.argv[2] === "-r") {
+  resetData();
 }

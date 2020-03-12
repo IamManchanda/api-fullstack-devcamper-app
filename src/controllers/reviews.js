@@ -49,3 +49,25 @@ exports.readReviewById = asyncHandler(async (req, res, next) => {
     data: { review },
   });
 });
+
+// @desc    - Create new review by bootcamp id.
+// @route   - POST /api/v1/bootcamps/:bootcampId/reviews
+// @access - Private
+exports.createNewReviewByBootcampId = asyncHandler(async (req, res, next) => {
+  req.body.bootcamp = req.params.bootcampId;
+  req.body.user = req.user.id;
+  const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+
+  if (!bootcamp) {
+    const errorMessage = `Bootcamp not found based on provided id: ${req.params.bootcampId}`;
+    return next(new ErrorResponse(errorMessage, 404));
+  }
+
+  const review = await Review.create(req.body);
+
+  res.status(201).json({
+    success: true,
+    message: `Successfully created new review by bootcamp id : ${req.params.bootcampId}`,
+    data: { review },
+  });
+});

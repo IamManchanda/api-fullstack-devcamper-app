@@ -33,4 +33,14 @@ const reviewSchema = new Schema({
   },
 });
 
+reviewSchema.index(
+  {
+    bootcamp: 1,
+    user: 1,
+  },
+  {
+    unique: true,
+  },
+);
+
 module.exports = model("Review", reviewSchema);

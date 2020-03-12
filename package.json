@@ -6,7 +6,7 @@
   "scripts": {
     "seed:destroy": "node src/seeder -d",
     "seed:import": "node src/seeder -i",
-    "seed": "npm run seed:destroy && npm run seed:import",
+    "seed": "node src/seeder -r",
     "dev": "nodemon src/server",
     "start": "NODE_ENV=production node src/server"
   },
