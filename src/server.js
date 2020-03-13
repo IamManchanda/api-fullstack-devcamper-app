@@ -6,6 +6,8 @@ const colors = require("colors");
 const fileupload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const xssClean = require("xss-clean");
 
 dotenv.config({
   path: "./config/config.env",
@@ -32,6 +34,8 @@ if (NODE_ENV === "development") {
 
 app.use(fileupload());
 app.use(mongoSanitize());
+app.use(helmet());
+app.use(xssClean());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/auth/admin/users", usersRoute);
