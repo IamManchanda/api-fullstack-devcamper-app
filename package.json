@@ -9,7 +9,7 @@
     "seed": "node src/seeder -r",
     "generate:docs": "docgen build -i src/docs/devcamper.postman_collection.json -o public/index.html",
     "dev": "npm run generate:docs && nodemon src/server",
-    "start": "npm run generate:docs && NODE_ENV=production node src/server"
+    "start": "NODE_ENV=production node src/server"
   },
   "repository": {
     "type": "git",
