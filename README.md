@@ -22,12 +22,6 @@ npm run dev
 npm start
 ```
 
-## Production Advice
-
-Please check this link to make your app in production to digitalocean - https://gist.github.com/bradtraversy/cd90d1ed3c462fe3bddd11bf8953a896
-
-You can use https://m.do.co/c/5424d440c63a for 100\$ credit as new user for 2 months
-
 ## Bootcamps
 
 - List all bootcamps in the database
@@ -132,7 +126,7 @@ You can use https://m.do.co/c/5424d440c63a for 100\$ credit as new user for 2 mo
 ## Deployment (Digital Ocean)
 
 - Push to Github
-- Create a droplet - https://m.do.co/c/19d4364406de
+- Create a droplet
 - Clone repo on to server
 - Use PM2 process manager
 - Enable firewall (ufw) and open needed ports
